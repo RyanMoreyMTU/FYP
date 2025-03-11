@@ -3,11 +3,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import glob
 
-# Find all result CSV files
 tf_files = glob.glob('tensorflow_gpu_results_batch*.csv')
 sk_files = glob.glob('sklearn_cpu_results_batch*.csv')
 
-# Read and combine results
 tf_dfs = []
 for file in tf_files:
     df = pd.read_csv(file)
@@ -27,13 +25,11 @@ for file in sk_files:
 tf_results = pd.concat(tf_dfs) if tf_dfs else pd.DataFrame()
 sk_results = pd.concat(sk_dfs) if sk_dfs else pd.DataFrame()
 
-# Extract dataset sizes from filenames
 if not tf_results.empty:
     tf_results['Size'] = tf_results['Dataset'].str.extract(r'data_(\d+)').astype(int)
 if not sk_results.empty:
     sk_results['Size'] = sk_results['Dataset'].str.extract(r'data_(\d+)').astype(int)
 
-# Aggregate results (average across runs)
 tf_agg = tf_results.groupby(['Size', 'Batch Size']).agg({
     'Training Time (s)': 'mean',
     'Inference Time (s)': 'mean',
@@ -46,14 +42,11 @@ sk_agg = sk_results.groupby(['Size', 'Batch Size']).agg({
     'Test Accuracy': 'mean'
 }).reset_index()
 
-# Add model identifier
 tf_agg['Model'] = 'TensorFlow (GPU)'
 sk_agg['Model'] = 'Scikit-learn (CPU)'
 
-# Combine data
 combined = pd.concat([tf_agg, sk_agg])
 
-# Create training time comparison plot
 plt.figure(figsize=(12, 8))
 for batch_size in combined['Batch Size'].unique():
     plt.subplot(1, 3, list(combined['Batch Size'].unique()).index(batch_size) + 1)
@@ -69,7 +62,6 @@ plt.tight_layout()
 plt.savefig('training_comparison.png')
 plt.show()
 
-# Create inference time comparison plot
 plt.figure(figsize=(12, 8))
 for batch_size in combined['Batch Size'].unique():
     plt.subplot(1, 3, list(combined['Batch Size'].unique()).index(batch_size) + 1)
