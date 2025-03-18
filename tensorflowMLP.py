@@ -1,3 +1,5 @@
+#ignore
+# eval "$(/root/anaconda3/bin/conda shell.bash hook)"
 import tensorflow as tf
 import numpy as np
 import pandas as pd
