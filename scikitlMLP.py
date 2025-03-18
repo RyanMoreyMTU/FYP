@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 import numpy as np
 import pandas as pd
 import time
-BATCH_SIZE = 32768
+BATCH_SIZE = 256
 def load_and_preprocess_data(file_path):
     """
     Load data from CSV and preprocess it.

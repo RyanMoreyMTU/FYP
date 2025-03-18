@@ -6,7 +6,7 @@ import pandas as pd
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-BATCH_SIZE=256
+BATCH_SIZE=32768
 def load_and_preprocess_data(file_path):
     """
     Load data from CSV and preprocess it.
@@ -156,5 +156,5 @@ if __name__ == "__main__":
     run_multiple_tests(
         data_files=data_files, 
         num_runs=3,  
-        output_file=f"results/sklearn_cpu_results_batchsize{BATCH_SIZE}.csv"
+        output_file=f"results/tensorflow_gpu_results_batchsize{BATCH_SIZE}.csv"
     )
