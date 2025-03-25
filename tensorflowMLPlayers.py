@@ -7,6 +7,8 @@ from sklearn.model_selection import train_test_split
 import os
 import csv
 
+#tf.config.set_visible_devices([], 'GPU')
+
 # Define constants
 BATCH_SIZE = 8192  # Using the batch size where GPU starts showing advantage
 LAYER_CONFIGS = [4, 8, 16, 32]  # Layer configurations to test
