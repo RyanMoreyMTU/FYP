@@ -6,7 +6,15 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 import os
 import csv
-
+try:
+    # Disable all GPUS
+    tf.config.set_visible_devices([], 'GPU')
+    visible_devices = tf.config.get_visible_devices()
+    for device in visible_devices:
+        assert device.device_type != 'GPU'
+except:
+    # Invalid device or cannot modify virtual devices once initialized.
+    pass
 # Define constants
 BATCH_SIZE = 8192  # Using the batch size where GPU starts showing advantage
 LAYER_CONFIGS = [4, 8, 16, 32]  # Layer configurations to test
@@ -180,5 +188,5 @@ if __name__ == "__main__":
     # For GPU
     run_multiple_tests(
         data_files=data_files,
-        output_file=f"results/tensorflow_gpu_layer_experiment_batchsize{BATCH_SIZE}.csv"
+        output_file=f"results/tensorflow_cpu_layer_experiment_batchsize{BATCH_SIZE}.csv"
     )
