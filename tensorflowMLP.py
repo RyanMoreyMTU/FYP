@@ -6,6 +6,8 @@ import pandas as pd
 import time
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+
+# tf.config.set_visible_devices([], 'GPU')
 BATCH_SIZE=32768
 def load_and_preprocess_data(file_path):
     """
