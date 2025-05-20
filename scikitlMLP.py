@@ -6,9 +6,6 @@ import pandas as pd
 import time
 BATCH_SIZE = 256
 def load_and_preprocess_data(file_path):
-    """
-    Load data from CSV and preprocess it.
-    """
 
     data = pd.read_csv(file_path)
 
@@ -25,9 +22,6 @@ def load_and_preprocess_data(file_path):
     return X_train, X_test, y_train, y_test
 
 def create_mlp_model():
-    """
-    Create MLPClassifier with identical architecture to TensorFlow model
-    """
     return MLPClassifier(
         hidden_layer_sizes=(100, 100),
         activation='relu',
@@ -74,14 +68,6 @@ def run_experiment(file_path):
     return results
 
 def run_multiple_tests(data_files, num_runs=3, output_file="sklearn_results.csv"):
-    """
-    Run multiple tests for each dataset and save results to CSV.
-    
-    Args:
-        data_files: List of data file paths to test
-        num_runs: Number of repeat runs for each dataset
-        output_file: CSV file to save results
-    """
     import csv
     import os
     import platform
