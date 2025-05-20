@@ -7,17 +7,16 @@ from sklearn.model_selection import train_test_split
 import os
 import csv
 
-# Define constants
-BATCH_SIZE = 8192  # Using the batch size where GPU starts showing advantage
-LAYER_CONFIGS = [4, 8, 16, 32]  # Layer configurations to test
-NUM_RUNS = 3  # Number of runs per configuration
-NEURONS_PER_LAYER = 100  # Number of neurons per layer
+BATCH_SIZE = 8192  # this batch size because it showed the most balanced data in the batch size experiments
+LAYER_CONFIGS = [4, 8, 16, 32]
+NUM_RUNS = 3
+NEURONS_PER_LAYER = 100
 
 def load_and_preprocess_data(file_path):
     """
     Load data from CSV and preprocess it.
     """
-    # Load the data
+    # load the data
     data = pd.read_csv(file_path)
     
     X = data.iloc[:, :-1].values
@@ -35,26 +34,19 @@ def load_and_preprocess_data(file_path):
     return X_train, X_test, y_train, y_test
 
 def create_mlp_model(input_dim, num_layers):
-    """
-    Create a configurable MLP model with variable depth
-    
-    Args:
-        input_dim: Dimension of input features
-        num_layers: Number of hidden layers
-    """
     # configure to use Adam optimizer with same defaults as sklearn
     optimizer = tf.keras.optimizers.Adam(learning_rate=0.001, beta_1=0.9, beta_2=0.999)
     
     model = tf.keras.Sequential()
     
-    # Input layer
+    # input layer
     model.add(tf.keras.layers.Dense(NEURONS_PER_LAYER, activation='relu', input_dim=input_dim))
     
-    # Hidden layers
+    # hidden layers
     for _ in range(num_layers - 1):  # -1 because we already added the first layer
         model.add(tf.keras.layers.Dense(NEURONS_PER_LAYER, activation='relu'))
     
-    # Output layer
+    # output layer
     model.add(tf.keras.layers.Dense(1, activation='sigmoid'))
     
     model.compile(
@@ -66,13 +58,10 @@ def create_mlp_model(input_dim, num_layers):
     return model
 
 def run_experiment(file_path, num_layers):
-    """
-    Run the complete experiment with specified number of layers and return metrics
-    """
     X_train, X_test, y_train, y_test = load_and_preprocess_data(file_path)
     model = create_mlp_model(X_train.shape[1], num_layers=num_layers)
     
-    # Print model summary for verification
+    # print model summary for verification
     print(f"Model with {num_layers} hidden layers:")
     model.summary()
     
@@ -89,7 +78,7 @@ def run_experiment(file_path, num_layers):
     
     training_time = time.time() - start_time
     
-    # Measure inference time and accuracy
+    # measure inference time and accuracy
     start_time = time.time()
     y_pred = model.predict(X_test, verbose=0)
     inference_time = time.time() - start_time
@@ -106,14 +95,7 @@ def run_experiment(file_path, num_layers):
     return results
 
 def run_multiple_tests(data_files, output_file="tensorflow_layer_results.csv"):
-    """
-    Run multiple tests for each dataset and layer configuration, and save results to CSV.
-    
-    Args:
-        data_files: List of data file paths to test
-        output_file: CSV file to save results
-    """
-    # Make results directory if it doesn't exist
+    # if the directory doesn't already exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
     # GPU Availability Check
@@ -132,7 +114,7 @@ def run_multiple_tests(data_files, output_file="tensorflow_layer_results.csv"):
             'Test Accuracy', 'Test Loss'
         ])
     
-    # Test each dataset with different layer configurations
+    # each dataset tested with each layer config
     for file_path in data_files:
         dataset_name = os.path.basename(file_path)
         print(f"\nRunning tests for {dataset_name}...")
@@ -177,7 +159,7 @@ if __name__ == "__main__":
         "datasets/data_100000.csv"
     ]
     
-    # For GPU
+    # output file needs to be changed depending on whether the gpu or cpu is running
     run_multiple_tests(
         data_files=data_files,
         output_file=f"results/tensorflow_cpu_layer_experiment_batchsize{BATCH_SIZE}.csv"
