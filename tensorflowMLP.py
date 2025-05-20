@@ -1,5 +1,3 @@
-#ignore
-# eval "$(/root/anaconda3/bin/conda shell.bash hook)"
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -71,7 +69,7 @@ def run_experiment(file_path):
     
     training_time = time.time() - start_time
     
-    # Measure inference time and accuracy
+    # record inference time and accuracy
     start_time = time.time()
     y_pred = model.predict(X_test, verbose=0)
     inference_time = time.time() - start_time
@@ -87,18 +85,10 @@ def run_experiment(file_path):
     return results
 
 def run_multiple_tests(data_files, num_runs=3, output_file="tensorflow_results.csv"):
-    """
-    Run multiple tests for each dataset and save results to CSV.
-    
-    Args:
-        data_files: List of data file paths to test
-        num_runs: Number of repeat runs for each dataset
-        output_file: CSV file to save results
-    """
     import csv
     import os
     
-    # GPU Availibility Check
+    # GPU availibility Check
     gpus = tf.config.list_physical_devices('GPU')
     gpu_available = len(gpus) > 0
     print(f"GPU Available: {gpu_available}")
