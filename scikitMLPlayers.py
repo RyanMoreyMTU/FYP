@@ -7,17 +7,13 @@ import time
 import os
 import csv
 
-# Define constants
-BATCH_SIZE = 8192  # Using the same batch size as the TensorFlow experiment
-LAYER_CONFIGS = [4, 8, 16, 32]  # Layer configurations to test
-NUM_RUNS = 3  # Number of runs per configuration
-NEURONS_PER_LAYER = 100  # Number of neurons per layer
+BATCH_SIZE = 8192  # this batch size because it showed the most balanced data from the batch size experiments
+LAYER_CONFIGS = [4, 8, 16, 32]  
+NUM_RUNS = 3 
+NEURONS_PER_LAYER = 100
 
 def load_and_preprocess_data(file_path):
-    """
-    Load data from CSV and preprocess it.
-    """
-    # Load the data
+    # load the data
     data = pd.read_csv(file_path)
     
     X = data.iloc[:, :-1].values
@@ -41,7 +37,7 @@ def create_mlp_model(num_layers):
     Args:
         num_layers: Number of hidden layers
     """
-    # Create a tuple of layer sizes with the specified number of layers
+    # a tuple of layer sizes with the specified number of layers
     hidden_layer_sizes = tuple([NEURONS_PER_LAYER] * num_layers)
     
     return MLPClassifier(
@@ -61,9 +57,6 @@ def create_mlp_model(num_layers):
     )
 
 def run_experiment(file_path, num_layers):
-    """
-    Run the complete experiment with specified number of layers and return metrics
-    """
     X_train, X_test, y_train, y_test = load_and_preprocess_data(file_path)
     
     model = create_mlp_model(num_layers=num_layers)
@@ -92,14 +85,7 @@ def run_experiment(file_path, num_layers):
     return results
 
 def run_multiple_tests(data_files, output_file="sklearn_layer_results.csv"):
-    """
-    Run multiple tests for each dataset and layer configuration, and save results to CSV.
-    
-    Args:
-        data_files: List of data file paths to test
-        output_file: CSV file to save results
-    """
-    # Make results directory if it doesn't exist
+    # if the directory doesn't already exist
     os.makedirs(os.path.dirname(output_file), exist_ok=True)
     
     # results file
@@ -111,7 +97,7 @@ def run_multiple_tests(data_files, output_file="sklearn_layer_results.csv"):
             'Test Accuracy', 'Final Loss'
         ])
     
-    # Test each dataset with different layer configurations
+    # each dataset tested with each layer config
     for file_path in data_files:
         dataset_name = os.path.basename(file_path)
         print(f"\nRunning tests for {dataset_name}...")
